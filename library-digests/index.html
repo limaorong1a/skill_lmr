@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub 学习雷达</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2330; --border:#2d3340;
+    --text:#e6edf3; --muted:#8b949e; --accent:#58a6ff; --accent2:#7ee787;
+    --gold:#f0b429; --done:#238636;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.6;padding:24px;max-width:1280px;margin:0 auto}
+  header{margin-bottom:20px}
+  h1{font-size:26px;display:flex;align-items:center;gap:10px}
+  h1 .dot{width:12px;height:12px;border-radius:50%;background:var(--accent2);box-shadow:0 0 12px var(--accent2)}
+  .sub{color:var(--muted);font-size:13px;margin-top:4px}
+  .stats{display:flex;gap:16px;margin:16px 0;flex-wrap:wrap}
+  .stat{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 16px;min-width:110px}
+  .stat .n{font-size:22px;font-weight:700;color:var(--accent)}
+  .stat .l{font-size:12px;color:var(--muted)}
+  .progress-wrap{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 16px;flex:1;min-width:220px}
+  .bar{height:8px;background:var(--panel2);border-radius:4px;overflow:hidden;margin-top:8px}
+  .bar > i{display:block;height:100%;background:linear-gradient(90deg,var(--done),var(--accent2));width:0;transition:width .4s}
+  .toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:18px 0}
+  input[type=search],select{background:var(--panel);border:1px solid var(--border);color:var(--text);
+    border-radius:8px;padding:9px 12px;font-size:14px;outline:none}
+  input[type=search]{flex:1;min-width:220px}
+  input[type=search]:focus,select:focus{border-color:var(--accent)}
+  button{cursor:pointer;border:none;border-radius:8px;font-size:14px;font-weight:600;padding:9px 16px;transition:.15s}
+  .btn-primary{background:var(--accent);color:#0d1117}
+  .btn-primary:hover{background:#79b8ff}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+  .chip{background:var(--panel);border:1px solid var(--border);color:var(--muted);border-radius:20px;
+    padding:5px 14px;font-size:13px;cursor:pointer;transition:.15s}
+  .chip:hover{border-color:var(--accent)}
+  .chip.active{background:var(--accent);color:#0d1117;border-color:var(--accent);font-weight:600}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;
+    display:flex;flex-direction:column;gap:8px;transition:.15s;position:relative}
+  .card:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .card.done{opacity:.55}
+  .card.done::after{content:"已学 ✓";position:absolute;top:12px;right:12px;background:var(--done);
+    color:#fff;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:700}
+  .card h3{font-size:16px;word-break:break-all}
+  .card h3 a{color:var(--accent);text-decoration:none}
+  .card h3 a:hover{text-decoration:underline}
+  .meta{display:flex;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted);align-items:center}
+  .tag{background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:1px 8px}
+  .tag.lang{color:var(--accent2)}
+  .tag.star{color:var(--gold)}
+  .tag.delta{color:var(--accent2)}
+  .field{font-size:13px}
+  .field b{color:var(--muted);font-weight:600}
+  .card .actions{margin-top:auto;display:flex;gap:8px;padding-top:8px}
+  .card .actions a,.card .actions button{font-size:12px;padding:6px 12px;flex:1;text-align:center;text-decoration:none}
+  .a-open{background:var(--panel2);color:var(--accent);border:1px solid var(--border)}
+  .a-learn{background:transparent;color:var(--muted);border:1px solid var(--border)}
+  .a-learn.is-done{background:var(--done);color:#fff;border-color:var(--done)}
+  .empty{text-align:center;color:var(--muted);padding:60px 0}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+  .modal.show{display:flex}
+  .modal .box{background:var(--panel);border:1px solid var(--accent);border-radius:14px;padding:24px;max-width:440px;width:100%}
+  .modal h2{font-size:14px;color:var(--gold);margin-bottom:10px}
+  .modal .close{margin-top:16px;width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:28px}
+</style>
+</head>
+<body>
+<header>
+  <h1><span class="dot"></span>GitHub 学习雷达</h1>
+  <div class="sub">数据更新：2026-06-22 ｜ 由 github-trending-digest 生成 ｜ 学习进度自动保存在本浏览器</div>
+  <div class="stats">
+    <div class="stat"><div class="n" id="s-total">0</div><div class="l">仓库总数</div></div>
+    <div class="stat"><div class="n" id="s-domain">0</div><div class="l">领域</div></div>
+    <div class="stat"><div class="n" id="s-done">0</div><div class="l">已学</div></div>
+    <div class="progress-wrap">
+      <div style="display:flex;justify-content:space-between;font-size:13px">
+        <span>学习进度</span><span id="p-text">0%</span>
+      </div>
+      <div class="bar"><i id="p-bar"></i></div>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <input type="search" id="q" placeholder="🔍 搜索仓库名 / 描述 / 适合谁…">
+  <select id="sort">
+    <option value="stars">按 Star 排序</option>
+    <option value="name">按名称排序</option>
+    <option value="domain">按领域排序</option>
+  </select>
+  <button class="btn-primary" id="pick">🎲 今天学一个</button>
+</div>
+<div class="chips" id="chips"></div>
+<div class="grid" id="grid"></div>
+<div class="empty" id="empty" style="display:none">没有匹配的仓库</div>
+
+<div class="modal" id="modal">
+  <div class="box" id="modal-box"></div>
+</div>
+
+<footer>双击本文件即可离线打开 · 学习记录存于 localStorage</footer>
+
+<script>
+const DATA = [{"name": "Panniantong/Agent-Reach", "url": "https://github.com/Panniantong/Agent-Reach", "lang": "Python", "stars": 37.6, "delta": "+8.2k/周", "domain": "AI", "what": "让 AI agent 读取/搜索各大内容平台的 CLI", "highlight": "一个 CLI 打通多平台、零 API 费用", "forWho": "做联网 agent、信息聚合的开发者"}, {"name": "asgeirtj/system_prompts_leaks", "url": "https://github.com/asgeirtj/system_prompts_leaks", "lang": "JavaScript", "stars": 44.9, "delta": "+2.0k/周", "domain": "Skills生态", "what": "主流 AI 产品系统提示词合集", "highlight": "一手 prompt 工程素材，研究 LLM 约束的范本", "forWho": "prompt 工程师、做 AI 产品的人"}, {"name": "addyosmani/agent-skills", "url": "https://github.com/addyosmani/agent-skills", "lang": "Shell", "stars": 65.2, "delta": "+5.6k/周", "domain": "Skills生态", "what": "面向 AI 编码 agent 的工程技能集", "highlight": "高质量 skill 参考样板，作者是知名工程师", "forWho": "写 agent skill、规范 AI 编码的人"}, {"name": "calesthio/OpenMontage", "url": "https://github.com/calesthio/OpenMontage", "lang": "Python", "stars": 10.9, "delta": "+2.9k/周", "domain": "AI", "what": "开源的 agentic 视频制作系统", "highlight": "首个开源 agentic 视频生产，复杂 agent 编排范例", "forWho": "做媒体自动化、多 agent 编排的人"}, {"name": "google-research/timesfm", "url": "https://github.com/google-research/timesfm", "lang": "Python", "stars": 25.1, "delta": "+4.1k/周", "domain": "AI", "what": "Google 的时间序列预测基础大模型", "highlight": "把基础模型范式带入时序领域", "forWho": "做需求预测、运维、金融时序的人"}, {"name": "NVIDIA/SkillSpector", "url": "https://github.com/NVIDIA/SkillSpector", "lang": "Python", "stars": 9.3, "delta": "+4.1k/周", "domain": "Skills生态", "what": "NVIDIA 的 AI agent skill 安全扫描器", "highlight": "切中 agent 供应链安全新痛点", "forWho": "用/分发 agent skill 的团队、安全工程师"}, {"name": "LMCache/LMCache", "url": "https://github.com/LMCache/LMCache", "lang": "Python", "stars": 9.6, "delta": "+1.4k/周", "domain": "AI", "what": "LLM 推理的 KV Cache 加速层", "highlight": "与 vLLM 结合显著降低首 token 延迟", "forWho": "部署 LLM 推理、做推理优化的人"}, {"name": "withastro/flue", "url": "https://github.com/withastro/flue", "lang": "TypeScript", "stars": 6.4, "delta": "+1.3k/周", "domain": "编码Agent", "what": "Astro 团队的沙箱 agent 框架", "highlight": "知名团队出品，主打安全沙箱", "forWho": "构建需隔离执行的 agent 应用的人"}, {"name": "DeusData/codebase-memory-mcp", "url": "https://github.com/DeusData/codebase-memory-mcp", "lang": "C", "stars": 11.1, "delta": "+6.4k/周", "domain": "知识图谱", "what": "高性能代码智能 MCP 服务", "highlight": "单二进制零依赖、省 99% token", "forWho": "给编码 agent 接代码记忆的人"}, {"name": "koala73/worldmonitor", "url": "https://github.com/koala73/worldmonitor", "lang": "TypeScript", "stars": 58.5, "delta": "+9.2k/周", "domain": "Web", "what": "实时全球情报/态势感知看板", "highlight": "本周新增最高，实时数据前端标杆", "forWho": "做实时看板、信息聚合产品的前端"}, {"name": "penpot/penpot", "url": "https://github.com/penpot/penpot", "lang": "Clojure", "stars": 52.7, "delta": "+2.6k/周", "domain": "Web", "what": "开源设计与代码协作工具(Figma 替代)", "highlight": "用 Clojure 构建的大型前端", "forWho": "设计团队、研究函数式前端的人"}, {"name": "makeplane/plane", "url": "https://github.com/makeplane/plane", "lang": "TypeScript", "stars": 52.5, "delta": "+1.5k/周", "domain": "Web", "what": "开源项目管理平台(Jira 替代)", "highlight": "完整 SaaS 级前后端架构", "forWho": "想读 SaaS 架构、需自托管 PM 工具的人"}, {"name": "Kong/insomnia", "url": "https://github.com/Kong/insomnia", "lang": "TypeScript", "stars": 39.5, "delta": "+1.0k/周", "domain": "Web", "what": "跨平台开源 API 客户端", "highlight": "Electron 复杂桌面应用工程范例", "forWho": "做 API 工具、桌面应用的开发者"}, {"name": "freeCodeCamp/freeCodeCamp", "url": "https://github.com/freeCodeCamp/freeCodeCamp", "lang": "TypeScript", "stars": 450, "delta": "+3.3k/周", "domain": "学习", "what": "免费学编程的开源课程与平台", "highlight": "星标最高的开源项目之一", "forWho": "学习者、研究超大型工程的人"}, {"name": "n0-computer/iroh", "url": "https://github.com/n0-computer/iroh", "lang": "Rust", "stars": 10.5, "delta": "+1.7k/周", "domain": "后端", "what": "Rust 模块化网络栈", "highlight": "现代 P2P/直连网络基础设施", "forWho": "做分布式、P2P、实时同步的人"}, {"name": "teslamate-org/teslamate", "url": "https://github.com/teslamate-org/teslamate", "lang": "Elixir", "stars": 8.6, "delta": "+431/周", "domain": "后端", "what": "自托管的特斯拉数据记录器", "highlight": "Elixir + 时序数据栈完整范例", "forWho": "Tesla 车主、学 Elixir 的人"}, {"name": "iptv-org/iptv", "url": "https://github.com/iptv-org/iptv", "lang": "TypeScript", "stars": 127, "delta": "+7.3k/周", "domain": "其他", "what": "全球公开 IPTV 频道合集", "highlight": "大型数据集自动化维护与 CI 校验范例", "forWho": "想要直播源、学数据仓库维护的人"}, {"name": "microsoft/markitdown", "url": "https://github.com/microsoft/markitdown", "lang": "Python", "stars": 157.6, "delta": "+33.2k/月", "domain": "AI", "what": "微软的文件/Office 文档转 Markdown 工具", "highlight": "LLM 数据预处理刚需，微软背书", "forWho": "做 RAG、文档处理、数据管道的人"}, {"name": "harry0703/MoneyPrinterTurbo", "url": "https://github.com/harry0703/MoneyPrinterTurbo", "lang": "Python", "stars": 91.2, "delta": "+13.1k/月", "domain": "AI", "what": "用 AI 大模型一键生成高清短视频", "highlight": "一键出片的国民级项目", "forWho": "做自媒体/营销短视频自动化的人"}, {"name": "lfnovo/open-notebook", "url": "https://github.com/lfnovo/open-notebook", "lang": "TypeScript", "stars": 32.5, "delta": "+8.7k/月", "domain": "AI", "what": "开源版 Google NotebookLM", "highlight": "自托管替代闭源、更灵活", "forWho": "做个人知识库、研究型用户"}, {"name": "tashfeenahmed/freellmapi", "url": "https://github.com/tashfeenahmed/freellmapi", "lang": "TypeScript", "stars": 11.5, "delta": "+8.1k/月", "domain": "AI", "what": "聚合 16 家免费 LLM 额度的 OpenAI 兼容代理", "highlight": "一个端点聚合多家免费额度", "forWho": "个人实验、想省 API 成本的开发者"}, {"name": "esengine/DeepSeek-Reasonix", "url": "https://github.com/esengine/DeepSeek-Reasonix", "lang": "Go", "stars": 23.8, "delta": "+18.5k/月", "domain": "编码Agent", "what": "DeepSeek 原生的终端 AI 编码 agent", "highlight": "围绕 prefix-cache 稳定性深度优化", "forWho": "用 DeepSeek、偏好终端编码 agent 的人"}, {"name": "can1357/oh-my-pi", "url": "https://github.com/can1357/oh-my-pi", "lang": "TypeScript", "stars": 14.1, "delta": "+8.2k/月", "domain": "编码Agent", "what": "终端 AI 编码 agent", "highlight": "hash 锚定编辑 + 完整工具链", "forWho": "研究编码 agent 工具设计的人"}, {"name": "ogulcancelik/herdr", "url": "https://github.com/ogulcancelik/herdr", "lang": "Rust", "stars": 6.8, "delta": "+4.7k/月", "domain": "编码Agent", "what": "终端里的 agent 多路复用器", "highlight": "Rust 写的轻量 agent 管理器", "forWho": "同时跑多个 agent 的重度用户"}, {"name": "Egonex-AI/Understand-Anything", "url": "https://github.com/Egonex-AI/Understand-Anything", "lang": "TypeScript", "stars": 66.0, "delta": "+49.3k/月", "domain": "知识图谱", "what": "把任意代码变成可交互的知识图谱", "highlight": "本月暴涨 +49k，教学型图谱", "forWho": "读大型代码库、做代码理解工具的人"}, {"name": "colbymchenry/codegraph", "url": "https://github.com/colbymchenry/codegraph", "lang": "TypeScript", "stars": 53.1, "delta": "+40.9k/月", "domain": "知识图谱", "what": "本地预索引的代码知识图谱，自动同步", "highlight": "本地化 + 省 token + 省工具调用", "forWho": "给 agent 接本地代码索引的人"}, {"name": "mvanhorn/last30days-skill", "url": "https://github.com/mvanhorn/last30days-skill", "lang": "Python", "stars": 45.7, "delta": "+19.3k/月", "domain": "Skills生态", "what": "研究任意话题最近动态的 agent skill", "highlight": "和趋势调研思路一致，最值得借鉴", "forWho": "做调研、趋势追踪的人"}, {"name": "Leonxlnx/taste-skill", "url": "https://github.com/Leonxlnx/taste-skill", "lang": "JavaScript", "stars": 48.9, "delta": "+29.9k/月", "domain": "Skills生态", "what": "给 AI 审美/品味的 skill", "highlight": "聚焦输出质感这一软痛点", "forWho": "在意 AI 输出质感的写作/产品人"}, {"name": "anthropics/knowledge-work-plugins", "url": "https://github.com/anthropics/knowledge-work-plugins", "lang": "Python", "stars": 21.7, "delta": "+9.3k/月", "domain": "Skills生态", "what": "Anthropic 官方面向知识工作者的 Claude 插件库", "highlight": "官方出品，了解插件规范的权威参考", "forWho": "做 Claude 插件/skill 的人"}, {"name": "mukul975/Anthropic-Cybersecurity-Skills", "url": "https://github.com/mukul975/Anthropic-Cybersecurity-Skills", "lang": "Python", "stars": 18.3, "delta": "+10.8k/月", "domain": "Skills生态", "what": "754 个结构化网络安全 agent skill", "highlight": "超大规模 skill 库，skill 标准化范例", "forWho": "安全工程、研究 skill 标准化的人"}, {"name": "phuryn/pm-skills", "url": "https://github.com/phuryn/pm-skills", "lang": "Markdown", "stars": 20.5, "delta": "+8.9k/月", "domain": "Skills生态", "what": "产品经理的 agentic skill 市场", "highlight": "把 PM 工作流系统地 agent 化", "forWho": "产品经理、做领域 skill 包的人"}, {"name": "hardikpandya/stop-slop", "url": "https://github.com/hardikpandya/stop-slop", "lang": "Markdown", "stars": 11.8, "delta": "+8.0k/月", "domain": "Skills生态", "what": "去除 AI 腔的写作 skill 文件", "highlight": "单文件 skill，轻量实用", "forWho": "用 AI 做写作的人"}, {"name": "openai/plugins", "url": "https://github.com/openai/plugins", "lang": "JavaScript", "stars": 3.3, "delta": "+2.1k/月", "domain": "Skills生态", "what": "OpenAI 官方插件库", "highlight": "官方规范参考", "forWho": "做 OpenAI 生态扩展的人"}, {"name": "rohitg00/ai-engineering-from-scratch", "url": "https://github.com/rohitg00/ai-engineering-from-scratch", "lang": "Python", "stars": 35.6, "delta": "+25.1k/月", "domain": "学习", "what": "从零学 AI 工程的实战教程", "highlight": "实战导向，Learn/Build/Ship 路线", "forWho": "想系统入门 AI 工程的人"}, {"name": "apple/container", "url": "https://github.com/apple/container", "lang": "Swift", "stars": 39.5, "delta": "+12.8k/月", "domain": "后端", "what": "Apple 官方在 Mac 上用轻量 VM 跑 Linux 容器", "highlight": "Apple 官方出品，Swift 编写", "forWho": "在 Mac 上做容器/开发环境的人"}];
+const LS_KEY = "learning-radar-done";
+let done = new Set(JSON.parse(localStorage.getItem(LS_KEY) || "[]"));
+let activeDomain = "全部";
+
+const domains = ["全部", ...Array.from(new Set(DATA.map(r => r.domain)))];
+const $ = id => document.getElementById(id);
+
+function save(){ localStorage.setItem(LS_KEY, JSON.stringify([...done])); }
+function starText(s){ return s >= 1 ? s + "k" : Math.round(s*1000); }
+
+function toggleDone(name){
+  if(done.has(name)) done.delete(name); else done.add(name);
+  save(); render();
+}
+
+function renderChips(){
+  $("chips").innerHTML = domains.map(d =>
+    `<span class="chip ${d===activeDomain?'active':''}" data-d="${d}">${d}</span>`
+  ).join("");
+  document.querySelectorAll(".chip").forEach(c =>
+    c.onclick = () => { activeDomain = c.dataset.d; render(); });
+}
+
+function currentList(){
+  const q = $("q").value.trim().toLowerCase();
+  let list = DATA.filter(r => {
+    if(activeDomain !== "全部" && r.domain !== activeDomain) return false;
+    if(!q) return true;
+    return (r.name+r.what+r.highlight+r.forWho+r.domain).toLowerCase().includes(q);
+  });
+  const sort = $("sort").value;
+  list.sort((a,b) =>
+    sort==="stars" ? b.stars-a.stars :
+    sort==="name" ? a.name.localeCompare(b.name) :
+    a.domain.localeCompare(b.domain) || b.stars-a.stars);
+  return list;
+}
+
+function cardHTML(r){
+  const isDone = done.has(r.name);
+  return `<div class="card ${isDone?'done':''}">
+    <h3><a href="${r.url}" target="_blank">${r.name}</a></h3>
+    <div class="meta">
+      <span class="tag lang">${r.lang||'—'}</span>
+      <span class="tag star">⭐ ${starText(r.stars)}</span>
+      ${r.delta?`<span class="tag delta">${r.delta}</span>`:''}
+      <span class="tag">${r.domain}</span>
+    </div>
+    <div class="field"><b>是什么：</b>${r.what}</div>
+    <div class="field"><b>亮点：</b>${r.highlight}</div>
+    <div class="field"><b>适合谁：</b>${r.forWho}</div>
+    <div class="actions">
+      <a class="a-open" href="${r.url}" target="_blank">打开仓库 →</a>
+      <button class="a-learn ${isDone?'is-done':''}" data-n="${r.name.replace(/"/g,'&quot;')}">
+        ${isDone?'✓ 已学':'标记已学'}</button>
+    </div>
+  </div>`;
+}
+
+function render(){
+  const list = currentList();
+  $("grid").innerHTML = list.map(cardHTML).join("");
+  $("empty").style.display = list.length ? "none" : "block";
+  document.querySelectorAll(".a-learn").forEach(b =>
+    b.onclick = () => toggleDone(b.dataset.n));
+  $("s-total").textContent = DATA.length;
+  $("s-domain").textContent = domains.length - 1;
+  $("s-done").textContent = done.size;
+  const pct = DATA.length ? Math.round(done.size/DATA.length*100) : 0;
+  $("p-text").textContent = pct + "%";
+  $("p-bar").style.width = pct + "%";
+}
+
+function pickRandom(){
+  const pool = DATA.filter(r => !done.has(r.name));
+  const r = (pool.length ? pool : DATA)[Math.floor(Math.random()*(pool.length?pool.length:DATA.length))];
+  $("modal-box").innerHTML = `<h2>🎲 今天学这个</h2>` + cardHTML(r) +
+    `<button class="close" id="m-close">关闭</button>`;
+  $("modal").classList.add("show");
+  $("m-close").onclick = () => $("modal").classList.remove("show");
+  $("modal-box").querySelectorAll(".a-learn").forEach(b =>
+    b.onclick = () => { toggleDone(b.dataset.n); $("modal").classList.remove("show"); });
+}
+
+$("q").oninput = render;
+$("sort").onchange = render;
+$("pick").onclick = pickRandom;
+$("modal").onclick = e => { if(e.target.id==="modal") $("modal").classList.remove("show"); };
+renderChips(); render();
+</script>
+</body>
+</html>

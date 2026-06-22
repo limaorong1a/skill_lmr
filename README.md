@@ -18,6 +18,16 @@
 
 生成的解析文档默认输出到当前工作区的 `library-digests/` 目录。
 
+### 一键 HTML 学习看板
+
+把调研到的仓库渲染成可交互的离线网页（搜索 / 领域筛选 / 排序 / 随机抽卡 / 学习进度，零依赖，双击即开）：
+
+```bash
+python .cursor/skills/github-trending-digest/scripts/build_html.py library-digests/data.json library-digests/index.html
+```
+
+打开 `library-digests/index.html` 即可使用。学习进度保存在浏览器本地。
+
 ## 在新电脑上恢复
 
 ```bash

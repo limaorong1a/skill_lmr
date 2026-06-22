@@ -99,6 +99,43 @@ description: >-
 - `library-digests/INDEX.md`：总索引/去重表，按领域+周列出所有已处理库，含一句话定位、模式标记、文档链接、star 快照。
 - 文件命名：深度 `<owner>__<repo>.md`；速览 `SCAN.md`；对比 `compare/<赛道>.md`；追踪 `tracking/<owner>__<repo>.md`。
 
+## 一键生成 HTML 看板
+
+任何模式发现/解析仓库后，都应把仓库写进 `library-digests/data.json`，再用脚本一键渲染成可交互的离线网页 `library-digests/index.html`（搜索/领域筛选/排序/随机抽卡/学习进度，零依赖，双击即开）。
+
+`data.json` 格式：
+
+```json
+{
+  "generated": "YYYY-MM-DD",
+  "repos": [
+    {
+      "name": "owner/repo",
+      "url": "https://github.com/owner/repo",
+      "lang": "Python",
+      "stars": 37.6,
+      "delta": "+8.2k/周",
+      "domain": "AI",
+      "what": "一句话定位",
+      "highlight": "亮点/为什么火",
+      "forWho": "适合谁"
+    }
+  ]
+}
+```
+
+- `stars` 用数字、单位 k（如 37.6 表示 37.6k，450 表示 450k）。
+- `delta` 可留空字符串；`domain` 用于筛选分组。
+- 新一轮发现时**追加**到 `repos`（先按 `name` 去重），并刷新 `generated`。
+
+生成/更新网页：
+
+```bash
+python .cursor/skills/github-trending-digest/scripts/build_html.py library-digests/data.json library-digests/index.html
+```
+
+脚本是自包含模板，会把数据内联进单个 HTML，无需联网或服务器。用户说"出网页/HTML/看板/dashboard"即执行此步。
+
 ## 复用方式（给用户的常用指令）
 
 - "本周热门项目速览" → 模式 A
@@ -106,6 +143,7 @@ description: >-
 - "对比一下 RAG 框架 / Agent 框架" → 模式 C
 - "X 最近更新了什么" → 模式 D
 - "更新本周热门库解析" → 读 INDEX 去重，只补新增/上升项目
+- "出个网页 / 生成 HTML 看板" → 更新 data.json 后跑 build_html.py
 
 ## 注意事项
 
