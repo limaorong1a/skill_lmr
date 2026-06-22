@@ -22,3 +22,21 @@
 | n0-computer/iroh | 后端 | A | Rust 模块化网络栈 | ⭐10.5k | [SCAN](2026-W26/SCAN.md) | 2026-06-22 |
 | teslamate-org/teslamate | 后端 | A | 自托管特斯拉数据记录器 | ⭐8.6k | [SCAN](2026-W26/SCAN.md) | 2026-06-22 |
 | iptv-org/iptv | 其他 | A | 全球 IPTV 频道合集 | ⭐127k | [SCAN](2026-W26/SCAN.md) | 2026-06-22 |
+| microsoft/markitdown | AI | A | 文件/Office 转 Markdown | ⭐157.6k | [SCAN-monthly](2026-W26/SCAN-monthly.md) | 2026-06-22 |
+| harry0703/MoneyPrinterTurbo | AI | A | AI 一键生成短视频 | ⭐91.2k | [SCAN-monthly](2026-W26/SCAN-monthly.md) | 2026-06-22 |
+| lfnovo/open-notebook | AI | A | 开源版 NotebookLM | ⭐32.5k | [SCAN-monthly](2026-W26/SCAN-monthly.md) | 2026-06-22 |
+| tashfeenahmed/freellmapi | AI | A | 聚合免费 LLM 的兼容代理 | ⭐11.5k | [SCAN-monthly](2026-W26/SCAN-monthly.md) | 2026-06-22 |
+| esengine/DeepSeek-Reasonix | AI | A | DeepSeek 终端编码 agent | ⭐23.8k | [SCAN-monthly](2026-W26/SCAN-monthly.md) | 2026-06-22 |
+| can1357/oh-my-pi | AI | A | 终端 AI 编码 agent | ⭐14.1k | [SCAN-monthly](2026-W26/SCAN-monthly.md) | 2026-06-22 |
+| ogulcancelik/herdr | AI | A | 终端 agent 多路复用器 | ⭐6.8k | [SCAN-monthly](2026-W26/SCAN-monthly.md) | 2026-06-22 |
+| Egonex-AI/Understand-Anything | AI | A | 代码转交互式知识图谱 | ⭐66.0k | [SCAN-monthly](2026-W26/SCAN-monthly.md) | 2026-06-22 |
+| colbymchenry/codegraph | AI | A | 本地代码知识图谱 | ⭐53.1k | [SCAN-monthly](2026-W26/SCAN-monthly.md) | 2026-06-22 |
+| mvanhorn/last30days-skill | AI | A | 跨平台话题调研 skill | ⭐45.7k | [SCAN-monthly](2026-W26/SCAN-monthly.md) | 2026-06-22 |
+| Leonxlnx/taste-skill | AI | A | 给 AI 审美的 skill | ⭐48.9k | [SCAN-monthly](2026-W26/SCAN-monthly.md) | 2026-06-22 |
+| anthropics/knowledge-work-plugins | AI | A | Anthropic 官方插件库 | ⭐21.7k | [SCAN-monthly](2026-W26/SCAN-monthly.md) | 2026-06-22 |
+| mukul975/Anthropic-Cybersecurity-Skills | AI | A | 754 个网络安全 skill | ⭐18.3k | [SCAN-monthly](2026-W26/SCAN-monthly.md) | 2026-06-22 |
+| phuryn/pm-skills | AI | A | PM agentic skill 市场 | ⭐20.5k | [SCAN-monthly](2026-W26/SCAN-monthly.md) | 2026-06-22 |
+| hardikpandya/stop-slop | AI | A | 去 AI 腔的写作 skill | ⭐11.8k | [SCAN-monthly](2026-W26/SCAN-monthly.md) | 2026-06-22 |
+| openai/plugins | AI | A | OpenAI 官方插件库 | ⭐3.3k | [SCAN-monthly](2026-W26/SCAN-monthly.md) | 2026-06-22 |
+| rohitg00/ai-engineering-from-scratch | 学习 | A | 从零学 AI 工程教程 | ⭐35.6k | [SCAN-monthly](2026-W26/SCAN-monthly.md) | 2026-06-22 |
+| apple/container | 后端 | A | Mac 上跑 Linux 容器 | ⭐39.5k | [SCAN-monthly](2026-W26/SCAN-monthly.md) | 2026-06-22 |
