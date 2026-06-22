@@ -1,86 +1,114 @@
 ---
 name: github-trending-digest
 description: >-
-  Discover trending and high-star GitHub repositories and produce in-depth
-  Chinese analysis documents for continuous learning. Use when the user wants to
-  research popular/hot GitHub repos, track GitHub trending, learn about
-  cutting-edge AI/LLM, web, or backend projects, or generate repository
-  deep-dive / code analysis docs (代码库解析/调研/热门库/趋势).
+  Discover trending and high-star GitHub repositories and produce Chinese
+  learning material for them: quick breadth scans, in-depth deep-dives,
+  side-by-side comparisons, and release/trend tracking. Use when the user wants
+  to research popular/hot GitHub repos, explore many new projects, track GitHub
+  trending, compare similar tools, follow a repo's latest releases, or learn
+  cutting-edge AI/LLM, web, or backend projects (代码库解析/调研/速览/对比/热门库/趋势).
 ---
 
 # GitHub 热门库解析 (GitHub Trending Digest)
 
-帮助用户持续发现 GitHub 上**高星 + 近期热度高**的代码库，并为每个库产出一份**深度解析文档**，便于实时学习前沿技术。
+帮助用户持续发现 GitHub 上**高星 + 近期热门**的代码库，并按需产出不同深度的学习材料，让其又快又深地了解更多前沿项目。
 
 ## 核心原则
 
 - **文档语言**：中文为主，技术术语、API 名、代码原文保留英文。
-- **深度优先**：每篇文档要讲清"它解决什么问题、架构怎么搭、关键源码在哪、设计为什么妙、我能学到什么"。
-- **可验证**：所有结论尽量来自 README / 源码 / 官方文档，附上链接；不臆造。
-- **关注领域**（默认）：AI / LLM / Agent、Web 前端与全栈、后端/数据库/分布式，以及综合热度榜。
+- **可验证**：结论尽量来自 README / 源码 / 官方文档并附链接；不确定标"待核实"，绝不臆造。
+- **不重复**：每次先读已解析索引，优先覆盖**新项目**，持续扩大视野。
+- **快照标注**：star/热度是时间快照，文档内写明数据获取日期。
+- **关注领域**（默认）：AI/LLM/Agent、Web 前端与全栈、后端/数据库/分布式，以及综合热度榜。
 
-## 工作流程
+## 四种模式（按需选用）
 
-复制此清单并跟踪进度：
+| 模式 | 目标 | 产出 | 适用 |
+|---|---|---|---|
+| A. 速览 | 一次了解**很多**项目 | 15-30 条一句话卡片清单 | "本周都火了啥" |
+| B. 深度 | 吃透**少量**项目 | 每库一篇深度解析（≤5 个） | "讲透 owner/repo" |
+| C. 对比 | 看懂一个**赛道** | 同类项目横向对比表 | "几个 Agent 框架怎么选" |
+| D. 追踪 | 跟进**最新动态** | 某库 release/重要 PR 演进 | "X 最近更新了啥" |
+
+模板均在 [template.md](template.md)；发现库的数据源与方法见 [sources.md](sources.md)。
+
+不确定用户要哪种时，默认先跑**模式 A 速览**给全貌，再问要对哪些进入模式 B 深度。
+
+## 统一前置：去重记忆
+
+任何模式开始前，先读 `library-digests/INDEX.md`（不存在则视为空）。它记录所有已处理过的库（owner/repo + 模式 + 日期）。
+
+- 速览/对比时：已深度解析过的库可标注"✅已解析"，把发现名额留给新项目。
+- 重跑"更新本周"时：跳过近期已覆盖的，只列**新增或热度明显上升**的。
+
+每次产出后，把涉及的库追加/更新进 `INDEX.md`。
+
+## 模式 A：速览（广度）
 
 ```
-任务进度:
-- [ ] 步骤 1: 发现候选热门库
-- [ ] 步骤 2: 与用户确认要解析的库
-- [ ] 步骤 3: 逐库深度调研
-- [ ] 步骤 4: 按模板生成解析文档
-- [ ] 步骤 5: 更新索引 README
+- [ ] 1. 读 INDEX.md 去重
+- [ ] 2. 按领域抓候选（每领域 5-8 个 + 综合榜 5-8 个）
+- [ ] 3. 用「速览卡片」模板批量输出
+- [ ] 4. 写入 library-digests/<YYYY-Www>/SCAN.md，更新 INDEX.md
+- [ ] 5. 问用户：要对哪几个进入深度模式？
 ```
 
-### 步骤 1: 发现候选热门库
+每条卡片只需：`owner/repo` · 一句话定位 · 1 个亮点 · 主语言 · star（近期增量）· 链接。**不深挖源码**，追求覆盖面。
 
-用联网工具拉取近期热门/高星库。优先级数据源与具体方法见 [sources.md](sources.md)。
+## 模式 B：深度解析
 
-- 默认时间窗口：**最近一周**（用户可指定 daily / weekly / monthly）。
-- 每个关注领域筛 3-5 个候选，连同"综合热度榜"再筛 3-5 个。
-- 对每个候选收集：仓库全名(owner/repo)、一句话定位、star 数、近期 star 增长/趋势、主语言、最近一次发版或活跃度。
-- 用一个简表把候选列给用户，**不要**直接对所有库写文档（避免浪费）。
+```
+- [ ] 1. 读 INDEX.md，确认目标库未重复
+- [ ] 2. 深度调研（见下）
+- [ ] 3. 用「深度解析」模板生成
+- [ ] 4. 存 library-digests/<YYYY-Www>/<owner>__<repo>.md，更新 INDEX.md
+```
 
-### 步骤 2: 与用户确认要解析的库
+调研顺序（每条尽量带来源链接）：
+1. 定位与背景（解决什么问题、面向谁、谁维护）
+2. 核心能力与差异化
+3. 技术栈与依赖
+4. 架构与目录结构（读 README 架构图、`docs/`、关键源文件）
+5. 关键源码：定位 2-4 个最能体现设计精髓的模块/文件，贴片段并标注路径
+6. 设计亮点 / 可迁移知识点（**最有价值部分**）
+7. 上手示例（最小可运行）
+8. 局限与适用场景
+9. TL;DR + 自测问题（帮助记忆）
 
-把候选简表给用户，让其勾选要深入解析哪些（默认可选热度最高的 3 个）。
-若用户已明确指定某个库，跳过步骤 1-2 直接解析。
+调研手段：WebFetch 抓 README/docs，WebSearch 补评测对比，需要看源码时抓 raw 文件 URL；结构化检索用 GitHub Search API（见 sources.md）。
 
-### 步骤 3: 逐库深度调研
+## 模式 C：横向对比
 
-对每个选定库，按此顺序收集信息（每条尽量带来源链接）：
+给定一个赛道（用户指定，或从速览里挑同类），选 3-6 个代表项目，用「对比表」模板输出：
 
-1. **定位与背景**：仓库主页、README、官网/文档站。它解决什么问题、面向谁、由谁维护。
-2. **核心能力**：主要 feature、对比同类项目的差异化。
-3. **技术栈**：语言、关键依赖、运行环境。
-4. **架构与目录**：顶层目录结构含义、核心模块划分、数据/控制流。读 README 架构图、`docs/`、关键源文件。
-5. **关键源码**：定位 2-4 个最能体现设计精髓的模块/文件，说明其职责与巧妙之处（贴关键代码片段并标注文件路径）。
-6. **设计亮点 / 可学知识点**：抽象出可迁移的工程思想、算法、模式（这是文档最有价值的部分）。
-7. **上手示例**：最小可运行示例或核心 API 用法。
-8. **局限与适用场景**：已知限制、何时该用/不该用。
+- 维度示例：定位、star/活跃度、核心机制、性能/规模、生态与集成、学习曲线、许可、适合场景。
+- 表后给**选型建议**：什么需求选哪个。
+- 存 `library-digests/compare/<赛道名>.md`。
 
-调研手段：优先 WebFetch 抓 README/docs，WebSearch 补充评测与对比；需要看具体源码时可抓 raw 文件 URL。
+## 模式 D：动态追踪
 
-### 步骤 4: 按模板生成解析文档
+对指定库追踪"最近发生了什么"：
 
-严格使用 [template.md](template.md) 的结构生成 Markdown。
+- 抓 Releases 页 / CHANGELOG，总结最近 2-3 个版本的关键变更与意义。
+- 抓近期合并的重要 PR / 里程碑 issue，提炼方向趋势。
+- 输出追加到该库深度文档的"动态"小节，或单独 `library-digests/tracking/<owner>__<repo>.md`。
 
-- 输出目录：当前工作区的 `library-digests/`（不存在则创建）。
-- 文件命名：`library-digests/<YYYY-Www>/<owner>__<repo>.md`，例如 `library-digests/2026-W26/langchain-ai__langchain.md`。
-- 代码片段必须标注来源文件路径；引用结论附链接。
+## 索引与输出约定
 
-### 步骤 5: 更新索引 README
-
-维护 `library-digests/README.md` 作为总索引：按周/领域列出已解析库，每条含一句话定位 + 文档链接 + star/热度快照。新文档生成后追加或更新对应条目。
+- 输出根目录：当前工作区 `library-digests/`（不存在则创建）。
+- `library-digests/INDEX.md`：总索引/去重表，按领域+周列出所有已处理库，含一句话定位、模式标记、文档链接、star 快照。
+- 文件命名：深度 `<owner>__<repo>.md`；速览 `SCAN.md`；对比 `compare/<赛道>.md`；追踪 `tracking/<owner>__<repo>.md`。
 
 ## 复用方式（给用户的常用指令）
 
-- "用 github-trending-digest 帮我调研本周 AI 方向的热门库" → 跑完整流程。
-- "解析一下 owner/repo" → 跳到步骤 3 直接深度解析指定库。
-- "更新本周热门库解析" → 重跑步骤 1，对比已有索引，只补新增/上升的库。
+- "本周热门项目速览" → 模式 A
+- "深度解析 owner/repo" → 模式 B
+- "对比一下 RAG 框架 / Agent 框架" → 模式 C
+- "X 最近更新了什么" → 模式 D
+- "更新本周热门库解析" → 读 INDEX 去重，只补新增/上升项目
 
 ## 注意事项
 
-- star 数与热度是**时间快照**，文档里写明数据获取日期。
-- 不确定的信息标注"待核实"，不要编造架构或源码细节。
-- 一次解析的库不宜过多（建议 ≤5 个），保证每篇深度。
+- 一次深度解析的库 ≤5，保证质量；速览可多但每条简短。
+- 日期相关的搜索 URL 用"当前日期"计算，不要硬编码过期日期。
+- 每篇文档末尾标注数据获取日期与生成来源。
