@@ -162,7 +162,7 @@ const esc = s => (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g
 const byName = n => DATA.find(r => r.name === n);
 
 function save(){ localStorage.setItem(LS_KEY, JSON.stringify([...done])); }
-function starText(s){ return s >= 1 ? s + "k" : Math.round(s*1000); }
+function starText(s){ if(typeof s!=="number"||isNaN(s)) return "—"; return s >= 1 ? s + "k" : Math.round(s*1000); }
 function toggleDone(name){ done.has(name) ? done.delete(name) : done.add(name); save(); renderAll(); }
 
 /* ---------- 今日一库 (D) ---------- */
