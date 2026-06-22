@@ -18,15 +18,20 @@
 
 生成的解析文档默认输出到当前工作区的 `library-digests/` 目录。
 
-### 一键 HTML 学习看板
+### 学习引擎（HTML 看板）
 
-把调研到的仓库渲染成可交互的离线网页（搜索 / 领域筛选 / 排序 / 随机抽卡 / 学习进度，零依赖，双击即开）：
+把调研到的仓库渲染成可交互的离线网页，集成三大能力：
+
+- **📅 每日一库**：每天推一个没学过的仓库
+- **🧭 选型顾问**：输入需求 → 从仓库库推荐 + 横向对比
+- **🔍 搜索 / 领域筛选 / 排序 + 卡片展开深度内容（README 提炼的核心能力/可学知识点/上手）**
+- **学习进度**：标记已学，进度存浏览器本地
 
 ```bash
 python .cursor/skills/github-trending-digest/scripts/build_html.py library-digests/data.json library-digests/index.html
 ```
 
-打开 `library-digests/index.html` 即可使用。学习进度保存在浏览器本地。
+打开 `library-digests/index.html` 即可使用。零依赖，双击即开。
 
 ## 在新电脑上恢复
 

@@ -99,9 +99,9 @@ description: >-
 - `library-digests/INDEX.md`：总索引/去重表，按领域+周列出所有已处理库，含一句话定位、模式标记、文档链接、star 快照。
 - 文件命名：深度 `<owner>__<repo>.md`；速览 `SCAN.md`；对比 `compare/<赛道>.md`；追踪 `tracking/<owner>__<repo>.md`。
 
-## 一键生成 HTML 看板
+## 学习引擎（data.json + HTML 看板）
 
-任何模式发现/解析仓库后，都应把仓库写进 `library-digests/data.json`，再用脚本一键渲染成可交互的离线网页 `library-digests/index.html`（搜索/领域筛选/排序/随机抽卡/学习进度，零依赖，双击即开）。
+任何模式发现/解析仓库后，都把仓库写进 `library-digests/data.json`，再用脚本一键渲染成可交互的离线网页 `library-digests/index.html`。网页是一个**学习引擎**，含：📅每日一库、🧭选型顾问、🔍搜索/筛选/排序、卡片展开深度内容、学习进度（localStorage）。零依赖，双击即开。
 
 `data.json` 格式：
 
@@ -118,14 +118,20 @@ description: >-
       "domain": "AI",
       "what": "一句话定位",
       "highlight": "亮点/为什么火",
-      "forWho": "适合谁"
+      "forWho": "适合谁",
+      "detail": {
+        "capabilities": ["核心能力1", "核心能力2"],
+        "learnings": ["可学知识点1", "可学知识点2"],
+        "quickstart": "最小上手命令/用法"
+      }
     }
   ]
 }
 ```
 
 - `stars` 用数字、单位 k（如 37.6 表示 37.6k，450 表示 450k）。
-- `delta` 可留空字符串；`domain` 用于筛选分组。
+- `delta` 可留空；`domain` 用于筛选分组。
+- `detail` 可选，由「深扒充实」流程填充（见下）；有 detail 的卡片在网页里可展开"深度内容"。
 - 新一轮发现时**追加**到 `repos`（先按 `name` 去重），并刷新 `generated`。
 
 生成/更新网页：
@@ -134,7 +140,11 @@ description: >-
 python .cursor/skills/github-trending-digest/scripts/build_html.py library-digests/data.json library-digests/index.html
 ```
 
-脚本是自包含模板，会把数据内联进单个 HTML，无需联网或服务器。用户说"出网页/HTML/看板/dashboard"即执行此步。
+脚本是自包含模板，把数据内联进单个 HTML，无需联网或服务器。用户说"出网页/HTML/看板/学习引擎"即执行此步。
+
+### 深扒充实（README → 深度内容）
+
+用户要"深扒/详细了解某个库"时：抓该仓库 README 原文（`https://raw.githubusercontent.com/<owner>/<repo>/<main|master>/README.md`），提炼出 `capabilities`/`learnings`/`quickstart` 写进 data.json 对应条目的 `detail`，再重建网页。`learnings` 要抽"可迁移的工程思想/设计取舍"，不是功能罗列。
 
 ## 复用方式（给用户的常用指令）
 
